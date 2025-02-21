@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('unique_info', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 100);
+            $table->string('title', 50);
+            $table->text('description');
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
             $table->timestamps();
         });
