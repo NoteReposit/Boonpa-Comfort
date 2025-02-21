@@ -3,85 +3,114 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\Customer;
+use App\Models\Employee;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
 use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    /**
-     * 📌 Register
-     */
-    public function register(Request $request)
+    // 🔹 Register Customers
+    public function registerCustomer(Request $request)
     {
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6',
-            'phone' => 'nullable|string|max:20',
-            'address' => 'nullable|string',
-            'role' => 'in:customer,admin'
+            'first_name' => 'required|string|max:50',
+            'last_name' => 'required|string|max:50',
+            'user_name' => 'required|string|max:50|unique:customers',
+            'email' => 'required|string|email|max:100|unique:customers',
+            'password' => 'required|string|min:6|confirmed',
+            'phone' => 'required|string|max:20|unique:customers',
+            'address' => 'nullable|string|max:255',
         ]);
 
-        $user = User::create([
-            'name' => $request->name,
+        $customer = Customer::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'user_name' => $request->user_name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'phone' => $request->phone,
             'address' => $request->address,
-            'role' => $request->role ?? 'customer',
         ]);
 
-        return response()->json([
-            'message' => 'User registered successfully!',
-            'user' => $user
-        ], 201);
+        $token = $customer->createToken('customer-token')->plainTextToken;
+
+        return response()->json(['token' => $token, 'user' => $customer], 201);
     }
 
-    /**
-     * 📌 Login
-     */
-    public function login(Request $request)
+    // 🔹 Register Employees
+    public function registerEmployee(Request $request)
+    {
+        $request->validate([
+            'first_name' => 'required|string|max:50',
+            'last_name' => 'required|string|max:50',
+            'user_name' => 'required|string|max:50|unique:employees',
+            'email' => 'required|string|email|max:100|unique:employees',
+            'password' => 'required|string|min:6|confirmed',
+            'phone' => 'required|string|max:20|unique:employees',
+        ]);
+
+        $employee = Employee::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'user_name' => $request->user_name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'phone' => $request->phone,
+        ]);
+
+        $token = $employee->createToken('employee-token')->plainTextToken;
+
+        return response()->json(['token' => $token, 'user' => $employee], 201);
+    }
+
+    // 🔹 Login Customers
+    public function loginCustomer(Request $request)
     {
         $request->validate([
             'email' => 'required|email',
-            'password' => 'required'
+            'password' => 'required',
         ]);
 
-        $user = User::where('email', $request->email)->first();
+        $customer = Customer::where('email', $request->email)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            throw ValidationException::withMessages([
-                'email' => ['Invalid credentials.']
-            ]);
+        if (!$customer || !Hash::check($request->password, $customer->password)) {
+            throw ValidationException::withMessages(['email' => 'Invalid credentials']);
         }
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $token = $customer->createToken('customer-token')->plainTextToken;
 
-        return response()->json([
-            'message' => 'Login successful!',
-            'user' => $user,
-            'token' => $token
-        ]);
+        return response()->json(['token' => $token, 'user' => $customer]);
     }
 
-    /**
-     * 📌 Logout
-     */
+    // 🔹 Login Employees
+    public function loginEmployee(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        $employee = Employee::where('email', $request->email)->first();
+
+        if (!$employee || !Hash::check($request->password, $employee->password)) {
+            throw ValidationException::withMessages(['email' => 'Invalid credentials']);
+        }
+
+        $token = $employee->createToken('employee-token')->plainTextToken;
+
+        return response()->json(['token' => $token, 'user' => $employee]);
+    }
+
+    // 🔹 Logout (Customers & Employees)
     public function logout(Request $request)
     {
         $request->user()->tokens()->delete();
-
-        return response()->json([
-            'message' => 'Logout successful!'
-        ]);
+        return response()->json(['message' => 'Logged out']);
     }
 
-    /**
-     * 📌 Get Profile
-     */
-    public function profile(Request $request)
+    // 🔹 Get Current Authenticated User
+    public function me(Request $request)
     {
         return response()->json($request->user());
     }
