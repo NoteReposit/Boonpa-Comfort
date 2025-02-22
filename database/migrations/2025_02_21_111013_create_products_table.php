@@ -19,7 +19,7 @@ return new class extends Migration
             $table->integer('stock_quantity')->unsigned();
             $table->string('image_url', 255)->nullable();
             $table->foreignId('category_id')->constrained('categories')->onDelete('cascade');
-            $table->foreignId('roomtype_id')->constrained('roomtypes')->onDelete('cascade');
+            $table->foreignId('roomtype_id')->constrained('room_types')->onDelete('cascade');
             $table->timestamps();
         });
     }

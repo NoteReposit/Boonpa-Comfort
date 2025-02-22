@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('unique_info', function (Blueprint $table) {
+        Schema::create('unique_infos', function (Blueprint $table) {
             $table->id();
             $table->string('title', 50);
             $table->text('description');
