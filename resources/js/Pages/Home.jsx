@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Head, usePage } from "@inertiajs/react";
+import { Head, usePage, Link } from "@inertiajs/react";
 
 export default function Home() {
     const { products, categories, roomtypes } = usePage().props;
@@ -53,7 +53,7 @@ export default function Home() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {filteredProducts.length > 0 ? (
                     filteredProducts.map((product) => (
-                        <div key={product.id} className="border p-4 rounded-lg shadow">
+                        <Link key={product.id} href={route('products.show', product.id)} className="border p-4 rounded-lg shadow">
                             <img
                                 src={product.image_url}
                                 alt={product.name}
@@ -66,7 +66,7 @@ export default function Home() {
                                 หมวดหมู่: {product.category?.name} | ห้อง: {product.roomtype?.name}
                             </p>
                             <p className="text-sm mt-1">คงเหลือ: {product.stock_quantity} ชิ้น</p>
-                        </div>
+                        </Link>
                     ))
                 ) : (
                     <p className="text-gray-500">ไม่พบสินค้า</p>
