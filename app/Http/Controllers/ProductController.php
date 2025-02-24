@@ -16,4 +16,13 @@ class ProductController extends Controller
             'products' => $products,
         ]);
     }
+
+    public function show($id): Response
+    {
+        $product = Product::with('category', 'roomtype')->findOrFail($id);
+
+        return Inertia::render('Products/Show', [
+            'product' => $product,
+        ]);
+    }
 }
