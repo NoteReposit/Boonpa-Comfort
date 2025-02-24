@@ -1,18 +1,15 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RoomTypeController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
-Route::get('/', function () {
-    return Inertia::render('Welcome', [
-        'canLogin' => Route::has('login'),
-        'canRegister' => Route::has('register'),
-        'laravelVersion' => Application::VERSION,
-        'phpVersion' => PHP_VERSION,
-    ]);
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
@@ -35,7 +32,15 @@ Route::middleware(['auth', 'role:employee'])->group(function () {
     Route::get('/test-e', function () {
         return 'You are an employee';
     });
+
+    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+
+    //category
+    Route::resource('categories', CategoryController::class);
+    //RoomType
+    Route::resource('roomtypes', RoomTypeController::class);
 });
 
 
-require __DIR__.'/auth.php';
+
+require __DIR__ . '/auth.php';
