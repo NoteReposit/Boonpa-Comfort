@@ -6,6 +6,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -31,5 +32,10 @@ Route::middleware('auth')->group(function () {
 Route::resource('categories', CategoryController::class);
 //RoomType
 Route::resource('roomtypes', RoomTypeController::class);
+
+Route::get('/products', [ProductController::class, 'index'])->name('products.index'); // แสดงรายการทั้งหมด
+Route::get('/products/create', [ProductController::class, 'create'])->name('products.create'); // ฟอร์มการสร้างสินค้า
+Route::post('/products', [ProductController::class, 'store'])->name('products.store'); // บันทึกสินค้า
+Route::resource('products', ProductController::class);
 
 require __DIR__.'/auth.php';

@@ -1,11 +1,11 @@
 import { Link, usePage, router } from "@inertiajs/react";
 
 export default function Index() {
-    const { categories } = usePage().props;
+    const { products } = usePage().props;
 
-    const deleteCategory = (id) => {
-        if (confirm("Are you sure you want to delete this category?")) {
-            router.delete(`/categories/${id}`);
+    const deleteProduct = (id) => {
+        if (confirm("Are you sure you want to delete this product?")) {
+            router.delete(`/products/${id}`);
         }
     };
 
@@ -21,6 +21,7 @@ export default function Index() {
                         <Link href="/products" className="text-white hover:text-gray-200 transition">
                             Product
                         </Link>
+
                         <Link href="/categories" className="text-white hover:text-gray-200 transition">
                             Categories
                         </Link>
@@ -34,14 +35,14 @@ export default function Index() {
             {/* Main Content */}
             <div className="container mx-auto mt-12 px-6">
                 <div className="bg-white p-8 rounded-lg shadow-lg">
-                    <h1 className="text-3xl font-bold text-gray-800 mb-6">📂 Category List</h1>
+                    <h1 className="text-3xl font-bold text-gray-800 mb-6">📂 Product List</h1>
 
                     <div className="flex justify-end mb-6">
                         <Link
-                            href="/categories/create"
+                            href="/products/create"
                             className="bg-blue-600 text-white px-6 py-3 rounded-lg shadow hover:bg-blue-700 transition"
                         >
-                            ➕ Add Category
+                            ➕ Add Product
                         </Link>
                     </div>
 
@@ -49,26 +50,32 @@ export default function Index() {
                         <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-sm">
                             <thead>
                                 <tr className="bg-gray-100">
-                                    <th className="py-3 px-6 text-left text-gray-700 font-semibold">Category Name</th>
-                                    <th className="py-3 px-6 text-left text-gray-700 font-semibold">Description</th>
-                                    <th className="py-3 px-6 text-center text-gray-700 font-semibold">Actions</th>
+                                    <th className="py-3 px-4 text-left text-gray-700 font-semibold">Product Name</th>
+                                    <th className="py-3 px-4 text-left text-gray-700 font-semibold">Description</th>
+                                    <th className="py-3 px-4 text-left text-gray-700 font-semibold">Price</th>
+                                    <th className="py-3 px-4 text-left text-gray-700 font-semibold">Stock</th>
+                                    <th className="py-3 px-4 text-left text-gray-700 font-semibold">Image</th>
+                                    <th className="py-3 px-4 text-center text-gray-700 font-semibold">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {categories.length > 0 ? (
-                                    categories.map((category) => (
-                                        <tr key={category.id} className="border-b hover:bg-gray-50 transition">
-                                            <td className="py-3 px-6 text-gray-800">{category.name}</td>
-                                            <td className="py-3 px-6 text-gray-600">{category.description || "No description"}</td>
-                                            <td className="py-3 px-6 flex justify-center gap-4">
+                                {products.length > 0 ? (
+                                    products.map((item) => (
+                                        <tr key={item.id} className="hover:bg-gray-50 transition">
+                                            <td className="py-3 px-4 text-left whitespace-nowrap">{item.name}</td>
+                                            <td className="py-3 px-4 text-left">{item.description}</td>
+                                            <td className="py-3 px-4 text-left">{item.price}</td>
+                                            <td className="py-3 px-4 text-left">{item.stock_quantity}</td>
+                                            <td className="py-3 px-4 text-left">{item.image_url}</td>
+                                            <td className="py-3 px-4 text-center">
                                                 <Link
-                                                    href={`/categories/${category.id}/edit`}
+                                                    href={`/products/${item.id}/edit`}
                                                     className="text-yellow-600 hover:text-yellow-800 transition"
                                                 >
                                                     ✏️ Edit
                                                 </Link>
                                                 <button
-                                                    onClick={() => deleteCategory(category.id)}
+                                                    onClick={() => deleteProduct(item.id)}
                                                     className="text-red-600 hover:text-red-800 transition"
                                                 >
                                                     🗑️ Delete
@@ -78,8 +85,8 @@ export default function Index() {
                                     ))
                                 ) : (
                                     <tr>
-                                        <td colSpan="3" className="text-center py-4 text-gray-500">
-                                            No categories found.
+                                        <td colSpan="6" className="text-center py-4 text-gray-500">
+                                            No product found.
                                         </td>
                                     </tr>
                                 )}

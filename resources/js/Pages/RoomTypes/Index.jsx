@@ -18,6 +18,9 @@ export default function RoomTypeIndex() {
                         🏠 Home
                     </Link>
                     <div className="space-x-6">
+                    <Link href="/products" className="text-white hover:text-gray-200 transition">
+                            Product
+                        </Link>
                         <Link href="/categories" className="text-white hover:text-gray-200 transition">
                             Categories
                         </Link>
