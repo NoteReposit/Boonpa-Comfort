@@ -13,14 +13,13 @@ return new class extends Migration {
             $table->string('address')->nullable()->after('password');
             $table->string('phone', 15)->nullable()->after('address');
             $table->enum('role', ['customer', 'employee'])->default('customer')->after('phone');
-            $table->string('image_url')->nullable();
         });
     }
 
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['first_name', 'last_name', 'user_name', 'address', 'phone', 'role']);
+            $table->dropColumn(['first_name', 'last_name', 'address', 'phone', 'role']);
         });
     }
 };
